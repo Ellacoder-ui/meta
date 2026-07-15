@@ -2,8 +2,8 @@
 
 ## Group Members
 - Ella Sharmaine N. Abeso
-- Member 2
-- Member 3
+- Buen Marie Abing
+- Mike Janzen Agcopra
 
 ## Description
 Initial project setup for our group assignment.
