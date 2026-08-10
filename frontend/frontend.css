@@ -1,0 +1,719 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* ─── CSS Variables / Design Tokens ─── */
+:root {
+  --primary: #0A4FAF;
+  --navy: #032B5B;
+  --royal: #1678D8;
+  --sky: #4DA6FF;
+  --light-bg: #EEF7FF;
+  --border-blue: #D6E6F8;
+  --text-primary: #17324D;
+  --text-secondary: #5D728A;
+  --success: #3CB371;
+  --error: #E74C3C;
+  --white: #FFFFFF;
+  --radius-sm: 10px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-2xl: 24px;
+}
+
+/* ─── Base ─── */
+* {
+  font-family: 'Poppins', ui-sans-serif, system-ui, sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--light-bg);
+  color: var(--text-primary);
+  min-height: 100vh;
+}
+
+/* ─── Frame 1: Role Selection ─── */
+.role-selection {
+  width: 100%;
+  min-height: 100vh;
+  background: linear-gradient(145deg, #EEF7FF 0%, #DAEEFF 40%, #EEF7FF 100%);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  overflow: hidden;
+}
+
+.role-selection__topbar {
+  width: 100%;
+  padding: 28px 48px;
+  display: flex;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.role-selection__hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  padding-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.role-selection__badge {
+  background: rgba(10, 79, 175, 0.08);
+  border: 1px solid rgba(10, 79, 175, 0.18);
+  border-radius: 100px;
+  padding: 6px 18px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--primary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.role-selection__title {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--navy);
+  margin: 0 0 10px;
+  text-align: center;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.role-selection__title span {
+  color: var(--royal);
+}
+
+.role-selection__subtitle {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin: 0 0 52px;
+  font-weight: 400;
+}
+
+.role-selection__cards {
+  display: flex;
+  gap: 28px;
+  align-items: stretch;
+}
+
+/* ─── Role Cards ─── */
+.role-card {
+  width: 320px;
+  border-radius: var(--radius-xl);
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* User card (light) */
+.role-card--user {
+  background: rgba(255, 255, 255, 0.80);
+  border: 1.5px solid var(--border-blue);
+  box-shadow: 0 4px 24px rgba(10, 79, 175, 0.07);
+}
+.role-card--user:hover {
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--royal);
+  box-shadow: 0 20px 60px rgba(10, 79, 175, 0.14), 0 4px 20px rgba(10, 79, 175, 0.08);
+  transform: translateY(-4px);
+}
+
+/* Admin card (dark) */
+.role-card--admin {
+  background: rgba(3, 43, 91, 0.88);
+  border: 1.5px solid rgba(77, 166, 255, 0.25);
+  box-shadow: 0 8px 32px rgba(3, 43, 91, 0.20);
+}
+.role-card--admin:hover {
+  background: rgba(3, 43, 91, 0.96);
+  border-color: var(--sky);
+  box-shadow: 0 20px 60px rgba(3, 43, 91, 0.40), 0 4px 20px rgba(22, 120, 216, 0.15);
+  transform: translateY(-4px);
+}
+
+.role-card__icon-wrap {
+  width: 76px;
+  height: 76px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.role-card--user .role-card__icon-wrap {
+  background: linear-gradient(135deg, #EEF7FF 0%, #D6E6F8 100%);
+  border: 1px solid var(--border-blue);
+}
+
+.role-card--admin .role-card__icon-wrap {
+  background: linear-gradient(135deg, rgba(77, 166, 255, 0.18) 0%, rgba(22, 120, 216, 0.12) 100%);
+  border: 1px solid rgba(77, 166, 255, 0.25);
+}
+
+.role-card__title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 10px;
+}
+.role-card--user .role-card__title { color: var(--navy); }
+.role-card--admin .role-card__title { color: #FFFFFF; }
+
+.role-card__desc {
+  font-size: 14px;
+  margin: 0 0 32px;
+  text-align: center;
+  line-height: 1.6;
+  font-weight: 400;
+}
+.role-card--user .role-card__desc { color: var(--text-secondary); }
+.role-card--admin .role-card__desc { color: rgba(255, 255, 255, 0.60); }
+
+/* ─── Buttons ─── */
+.btn {
+  width: 100%;
+  padding: 13px 0;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.01em;
+  font-family: inherit;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.btn:hover { opacity: 0.9; }
+.btn:active { transform: scale(0.98); }
+
+.btn--primary {
+  background: linear-gradient(135deg, #0A4FAF 0%, #1678D8 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 14px rgba(10, 79, 175, 0.30);
+}
+
+.btn--primary-lg {
+  padding: 14px 0;
+  font-size: 15px;
+  background: linear-gradient(135deg, #0A4FAF 0%, #1678D8 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 16px rgba(10, 79, 175, 0.30);
+}
+
+.btn--admin-primary {
+  padding: 14px 0;
+  font-size: 15px;
+  background: linear-gradient(135deg, #1678D8 0%, #4DA6FF 100%);
+  color: #FFFFFF;
+  box-shadow: 0 4px 20px rgba(22, 120, 216, 0.40);
+}
+
+.btn--secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--border-blue);
+  font-size: 14px;
+  font-weight: 500;
+}
+.btn--secondary:hover { background: rgba(10, 79, 175, 0.04); }
+
+.btn--secondary-dark {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  border: 1.5px solid rgba(77, 166, 255, 0.18);
+  font-size: 14px;
+  font-weight: 500;
+}
+.btn--secondary-dark:hover { background: rgba(255, 255, 255, 0.05); }
+
+/* ─── Footer ─── */
+.role-selection__footer {
+  width: 100%;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-top: 1px solid rgba(10, 79, 175, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+.role-selection__footer span {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* ─── Frame 2 & 3: Split Login Layout ─── */
+.login-page {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+}
+
+/* User login background */
+.login-page--user {
+  background: linear-gradient(145deg, #EEF7FF 0%, #DAEEFF 50%, #EEF7FF 100%);
+}
+
+/* Admin login background */
+.login-page--admin {
+  background: linear-gradient(145deg, #021627 0%, #032B5B 50%, #0A3070 100%);
+}
+
+/* ─── Left Illustration Panel ─── */
+.login-panel-left {
+  flex: 0 0 45%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 44px 52px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.login-panel-left--user {
+  background: linear-gradient(160deg, #0A4FAF 0%, #032B5B 60%, #021D3E 100%);
+}
+
+.login-panel-left--admin {
+  background: linear-gradient(160deg, #032B5B 0%, #021627 70%, #010E1C 100%);
+  border-right: 1px solid rgba(77, 166, 255, 0.10);
+}
+
+.left-panel__content {
+  position: relative;
+  z-index: 2;
+}
+
+.left-panel__quote-card {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-lg);
+  padding: 28px 32px;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  max-width: 340px;
+  position: relative;
+  z-index: 2;
+}
+
+.left-panel__quote-card--admin {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(77, 166, 255, 0.15);
+}
+
+.left-panel__icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(77, 166, 255, 0.20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.left-panel__icon-box--admin {
+  background: rgba(77, 166, 255, 0.12);
+  border: 1px solid rgba(77, 166, 255, 0.20);
+}
+
+.left-panel__quote {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  margin: 0;
+  font-weight: 400;
+}
+
+.left-panel__quote--admin {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.left-panel__author {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.left-panel__avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1678D8, #4DA6FF);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.left-panel__author-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.left-panel__author-sub {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.50);
+}
+
+.left-panel__tags {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.left-panel__tag {
+  background: rgba(77, 166, 255, 0.12);
+  border: 1px solid rgba(77, 166, 255, 0.20);
+  border-radius: 100px;
+  padding: 3px 10px;
+  font-size: 10px;
+  color: var(--sky);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.left-panel__copyright {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.25);
+  margin: 0;
+  letter-spacing: 0.03em;
+  position: relative;
+  z-index: 2;
+}
+
+/* ─── Right Login Card Panel ─── */
+.login-panel-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  position: relative;
+  z-index: 2;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  border-radius: var(--radius-2xl);
+  padding: 48px 44px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.login-card--user {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid var(--border-blue);
+  box-shadow: 0 16px 60px rgba(10, 79, 175, 0.10), 0 4px 20px rgba(10, 79, 175, 0.06);
+}
+
+.login-card--admin {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(77, 166, 255, 0.18);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.40), 0 4px 24px rgba(0, 0, 0, 0.25);
+}
+
+/* ─── Login Card Header ─── */
+.login-card__portal-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 100px;
+  padding: 4px 14px;
+  margin-bottom: 18px;
+}
+
+.login-card__portal-badge--user {
+  background: rgba(10, 79, 175, 0.07);
+  border: 1px solid rgba(10, 79, 175, 0.14);
+}
+
+.login-card__portal-badge--admin {
+  background: rgba(77, 166, 255, 0.10);
+  border: 1px solid rgba(77, 166, 255, 0.20);
+}
+
+.login-card__badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.login-card__portal-badge--user .login-card__badge-dot { background: var(--royal); }
+.login-card__portal-badge--admin .login-card__badge-dot { background: var(--sky); }
+
+.login-card__badge-text {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.login-card__portal-badge--user .login-card__badge-text { color: var(--primary); }
+.login-card__portal-badge--admin .login-card__badge-text { color: var(--sky); }
+
+.login-card__title {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.02em;
+}
+.login-card--user .login-card__title { color: var(--navy); }
+.login-card--admin .login-card__title { color: #FFFFFF; }
+
+.login-card__subtitle {
+  font-size: 14px;
+  margin: 0 0 36px;
+  font-weight: 400;
+}
+.login-card--user .login-card__subtitle { color: var(--text-secondary); }
+.login-card--admin .login-card__subtitle { color: rgba(255, 255, 255, 0.50); }
+
+/* ─── Form Fields ─── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+
+.form-group:last-of-type { margin-bottom: 0; }
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+}
+
+.form-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.login-card--user .form-label { color: var(--text-primary); }
+.login-card--admin .form-label { color: rgba(255, 255, 255, 0.75); }
+
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.18s ease;
+  font-family: inherit;
+}
+
+/* User input */
+.form-input--user {
+  border: 1.5px solid var(--border-blue);
+  background: #F7FBFF;
+  color: var(--text-primary);
+}
+.form-input--user:focus {
+  border-color: var(--royal);
+  background: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(22, 120, 216, 0.12);
+}
+.form-input--user::placeholder { color: #A8C4E0; }
+
+/* Admin input */
+.form-input--admin {
+  border: 1.5px solid rgba(77, 166, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
+  color: #FFFFFF;
+}
+.form-input--admin:focus {
+  border-color: var(--sky);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(77, 166, 255, 0.15);
+}
+.form-input--admin::placeholder { color: rgba(255, 255, 255, 0.25); }
+
+/* ─── Form Options Row ─── */
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 28px;
+}
+
+.form-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.form-checkbox {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  border: 2px solid var(--border-blue);
+  background: transparent;
+}
+
+.form-checkbox.is-checked {
+  border-color: var(--royal);
+  background: var(--royal);
+}
+
+.form-checkbox--admin {
+  border-color: rgba(77, 166, 255, 0.25);
+}
+.form-checkbox--admin.is-checked {
+  border-color: var(--sky);
+  background: var(--royal);
+}
+
+.form-checkbox__text {
+  font-size: 13px;
+  font-weight: 400;
+}
+.login-card--user .form-checkbox__text { color: var(--text-secondary); }
+.login-card--admin .form-checkbox__text { color: rgba(255, 255, 255, 0.55); }
+
+.form-forgot-link {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: var(--royal);
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ─── Button Group ─── */
+.btn-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ─── Security Notice ─── */
+.security-notice {
+  margin-top: 24px;
+  padding: 12px 16px;
+  background: rgba(231, 76, 60, 0.08);
+  border: 1px solid rgba(231, 76, 60, 0.20);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.security-notice__text {
+  font-size: 11px;
+  color: rgba(231, 76, 60, 0.80);
+  font-weight: 400;
+}
+
+/* ─── Logo ─── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo__name {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--primary);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+}
+
+.logo--dark .logo__name { color: #FFFFFF; }
+
+.logo__sub {
+  font-weight: 400;
+  font-size: 10px;
+  color: var(--text-secondary);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.logo--dark .logo__sub { color: rgba(255, 255, 255, 0.55); }
+
+/* ─── Wave Ring Background (SVG overlay) ─── */
+.wave-rings {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 1024px) {
+  .role-selection__cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .role-card {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .role-selection__title { font-size: 32px; }
+
+  .login-panel-left { display: none; }
+
+  .login-panel-right { padding: 32px 24px; }
+
+  .login-card { padding: 36px 28px; }
+}
+
+@media (max-width: 600px) {
+  .role-selection__topbar { padding: 20px 24px; }
+  .role-selection__title { font-size: 26px; }
+  .login-card { padding: 28px 20px; }
+  .login-card__title { font-size: 22px; }
+}
