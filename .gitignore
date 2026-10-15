@@ -1,9 +1,21 @@
-# Meta Project
+# Dependencies
+node_modules/
+vendor/
 
-## Group Members
-- Ella Sharmaine N. Abeso
-- Member 2
-- Member 3
+# Environment
+.env
+.env.*
+!.env.example
 
-## Description
-Initial project setup for our group assignment.
+# Databases
+database.sqlite
+
+# Binaries
+composer.phar
+
+# Logs
+*.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
