@@ -78,6 +78,19 @@ class TransactionController extends Controller
                 ], 422);
             }
 
+            // Prevent double-booking: reject if another pending/active
+            // borrow already exists for this item.
+            $existing = Transaction::where('item_id', $item->id)
+                ->whereIn('status', ['pending', 'approved', 'active'])
+                ->exists();
+
+            if ($existing) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Item is not available for borrowing.',
+                ], 422);
+            }
+
             return Transaction::create([
                 'user_id' => $request->user()->id,
                 'item_id' => $item->id,
@@ -99,6 +112,16 @@ class TransactionController extends Controller
 
     public function updateStatus(TransactionStatusRequest $request, Transaction $transaction): JsonResponse
     {
+        $user = $request->user();
+
+        // Regular users can only transition transactions they own.
+        if ($user->role !== 'admin' && $transaction->user_id !== $user->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to modify this transaction.',
+            ], 403);
+        }
+
         $status = $request->string('status')->toString();
 
         $allowed = [

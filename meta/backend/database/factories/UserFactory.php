@@ -1,4 +1,3 @@
--- Active: 1776609865224@@127.0.0.1@3306@bsitdb22
 <?php
 
 namespace Database\Factories;

@@ -10,8 +10,17 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $user = $request->user();
+
+        if ($user->role !== 'admin') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Only administrators can view the user list.',
+            ], 403);
+        }
+
         return response()->json([
             'success' => true,
             'data' => User::orderBy('name')->get(['id', 'name', 'email', 'role', 'department', 'status']),
