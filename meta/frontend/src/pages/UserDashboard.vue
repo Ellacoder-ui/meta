@@ -3,8 +3,10 @@ import { onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
 import { clearSession, getUser } from '@/services/auth'
+import { useToast } from '@/services/toast'
 
 const router = useRouter()
+const toast = useToast()
 const user = ref(getUser())
 const stats = reactive({ total_items: '—', available_items: '—', borrowed_items: '—', pending_requests: '—' })
 const items = ref([])
@@ -12,32 +14,46 @@ const categories = ref([])
 const myTransactions = ref([])
 const borrowItemId = ref('')
 const expectedReturnAt = ref('')
-const borrowMessage = ref('')
+const search = ref('')
+const pagination = reactive({
+  current_page: 1,
+  last_page: 1,
+  per_page: 15,
+  total: 0,
+  from: null,
+  to: null,
+})
 const loading = ref(true)
-const error = ref('')
 
 async function fetchAll() {
   loading.value = true
   try {
     const [statsRes, itemsRes, categoriesRes, txRes] = await Promise.all([
       api.get('/dashboard/stats'),
-      api.get('/items', { params: { status: 'available' } }),
+      api.get('/items', {
+        params: {
+          search: search.value || undefined,
+          status: 'available',
+          page: pagination.current_page,
+          per_page: pagination.per_page,
+        },
+      }),
       api.get('/categories'),
       api.get('/transactions', { params: { user_id: user.value?.id } }),
     ])
     Object.assign(stats, statsRes.data.data)
-    items.value = itemsRes.data.data
-    categories.value = categoriesRes.data.data
-    myTransactions.value = txRes.data.data
+    items.value = itemsRes.data.data || []
+    Object.assign(pagination, itemsRes.data.meta || {})
+    categories.value = categoriesRes.data.data || []
+    myTransactions.value = txRes.data.data || []
   } catch (e) {
-    error.value = e.response?.data?.message || 'Failed to load dashboard data.'
+    // api.js interceptor already shows a toast for HTTP errors
   } finally {
     loading.value = false
   }
 }
 
 async function borrow() {
-  borrowMessage.value = ''
   if (!borrowItemId.value || !expectedReturnAt.value) return
   loading.value = true
   try {
@@ -45,15 +61,26 @@ async function borrow() {
       item_id: Number(borrowItemId.value),
       expected_return_at: expectedReturnAt.value,
     })
-    borrowMessage.value = 'Borrow request submitted.'
+    toast.success('Borrow request submitted successfully.')
     borrowItemId.value = ''
     expectedReturnAt.value = ''
     await fetchAll()
   } catch (e) {
-    borrowMessage.value = e.response?.data?.message || 'Failed to submit request.'
+    // api.js interceptor already shows a toast for HTTP errors (including 422 validation)
   } finally {
     loading.value = false
   }
+}
+
+function setPage(page) {
+  if (page < 1 || page > pagination.last_page) return
+  pagination.current_page = page
+  fetchAll()
+}
+
+function applyFilters() {
+  pagination.current_page = 1
+  fetchAll()
 }
 
 async function logout() {
@@ -113,11 +140,19 @@ onMounted(fetchAll)
             {{ loading ? 'Requesting...' : 'Request' }}
           </button>
         </form>
-        <p v-if="borrowMessage">{{ borrowMessage }}</p>
       </div>
 
       <div class="section-card">
-        <div class="section-card__header"><span class="section-card__title">Available Items</span></div>
+        <div class="section-card__header" style="display:flex;justify-content:space-between;align-items:center">
+          <span class="section-card__title">Available Items</span>
+          <input
+            v-model="search"
+            @change="applyFilters"
+            placeholder="Search by name or asset tag..."
+            class="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            style="min-width:220px;font-size:12px"
+          />
+        </div>
         <table v-if="items.length" style="width:100%;border-collapse:collapse">
           <thead><tr><th align="left">Asset Tag</th><th align="left">Name</th><th align="left">Category</th><th align="left">Location</th></tr></thead>
           <tbody>
@@ -127,6 +162,33 @@ onMounted(fetchAll)
           </tbody>
         </table>
         <div v-else class="empty-state"><div class="empty-state__title">No available items</div></div>
+
+        <div v-if="pagination.total > 0" style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:8px">
+          <div style="font-size:12px;color:var(--c-text-sub)">
+            Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }}
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button
+              :disabled="pagination.current_page === 1"
+              @click="setPage(pagination.current_page - 1)"
+              class="btn btn--sky"
+              style="padding:6px 12px;font-size:12px"
+            >
+              Prev
+            </button>
+            <span style="font-size:12px;color:var(--c-text-sub)">
+              Page {{ pagination.current_page }} of {{ pagination.last_page }}
+            </span>
+            <button
+              :disabled="pagination.current_page === pagination.last_page"
+              @click="setPage(pagination.current_page + 1)"
+              class="btn btn--sky"
+              style="padding:6px 12px;font-size:12px"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </div>
 
       <div class="section-card">

@@ -6,14 +6,34 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        $query = Category::withCount('items');
+
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where('name', 'like', '%'.$search.'%')
+                ->orWhere('description', 'like', '%'.$search.'%');
+        }
+
+        $perPage = (int) $request->input('per_page', 15);
+        $categories = $query->paginate($perPage);
+
         return response()->json([
             'success' => true,
-            'data' => Category::withCount('items')->get(),
+            'data' => $categories->items(),
+            'meta' => [
+                'current_page' => $categories->currentPage(),
+                'last_page' => $categories->lastPage(),
+                'per_page' => $categories->perPage(),
+                'total' => $categories->total(),
+                'from' => $categories->firstItem(),
+                'to' => $categories->lastItem(),
+            ],
         ]);
     }
 

@@ -24,6 +24,19 @@ class TransactionController extends Controller
             ? Transaction::with(['user', 'item', 'approver'])
             : $user->transactions()->with(['item', 'approver']);
 
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function ($q) use ($search) {
+                $q->whereHas('item', function ($itemQuery) use ($search) {
+                    $itemQuery->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('asset_tag', 'like', '%'.$search.'%');
+                })->orWhereHas('user', function ($userQuery) use ($search) {
+                    $userQuery->where('name', 'like', '%'.$search.'%')
+                        ->orWhere('email', 'like', '%'.$search.'%');
+                });
+            });
+        }
+
         if ($request->filled('status')) {
             $query->where('status', $request->string('status'));
         }
@@ -32,9 +45,20 @@ class TransactionController extends Controller
             $query->where('user_id', $request->integer('user_id'));
         }
 
+        $perPage = (int) $request->input('per_page', 15);
+        $transactions = $query->latest()->paginate($perPage);
+
         return response()->json([
             'success' => true,
-            'data' => $query->latest()->get(),
+            'data' => $transactions->items(),
+            'meta' => [
+                'current_page' => $transactions->currentPage(),
+                'last_page' => $transactions->lastPage(),
+                'per_page' => $transactions->perPage(),
+                'total' => $transactions->total(),
+                'from' => $transactions->firstItem(),
+                'to' => $transactions->lastItem(),
+            ],
         ]);
     }
 

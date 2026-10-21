@@ -3,20 +3,20 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
 import { saveSession } from '@/services/auth'
+import { useToast } from '@/services/toast'
 
 const router = useRouter()
+const toast = useToast()
 const name = ref('')
 const email = ref('')
 const department = ref('')
 const password = ref('')
 const passwordConfirmation = ref('')
-const error = ref('')
 const loading = ref(false)
 
 async function register() {
-  error.value = ''
   if (password.value !== passwordConfirmation.value) {
-    error.value = 'Passwords do not match.'
+    toast.error('Passwords do not match.')
     return
   }
   loading.value = true
@@ -29,9 +29,10 @@ async function register() {
       department: department.value || null,
     })
     saveSession(data.data.token, data.data.user)
+    toast.success('Account created successfully.')
     router.push('/user')
   } catch (e) {
-    error.value = e.response?.data?.message || 'Registration failed. Please try again.'
+    // api.js interceptor already shows a toast for HTTP errors
   } finally {
     loading.value = false
   }
@@ -61,8 +62,6 @@ async function register() {
         <h1 class="auth-card__title">Sign Up</h1>
         <p class="auth-card__subtitle">Create your TechVault account to get started.</p>
         <div class="auth-divider"></div>
-
-        <p v-if="error" class="auth-error">{{ error }}</p>
 
         <form class="auth-form" @submit.prevent="register">
           <div class="form-field">

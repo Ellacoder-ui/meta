@@ -3,6 +3,8 @@ import LoginPage from '@/pages/LoginPage.vue'
 import RegisterPage from '@/pages/RegisterPage.vue'
 import AdminDashboard from '@/pages/AdminDashboard.vue'
 import UserDashboard from '@/pages/UserDashboard.vue'
+import ItemPage from '@/pages/ItemPage.vue'
+import CategoryPage from '@/pages/CategoryPage.vue'
 import { getToken, getUser } from '@/services/auth'
 
 const routes = [
@@ -13,6 +15,18 @@ const routes = [
     path: '/admin',
     name: 'admin',
     component: AdminDashboard,
+    meta: { requiresAuth: true, role: 'admin' },
+  },
+  {
+    path: '/admin/items',
+    name: 'admin-items',
+    component: ItemPage,
+    meta: { requiresAuth: true, role: 'admin' },
+  },
+  {
+    path: '/admin/categories',
+    name: 'admin-categories',
+    component: CategoryPage,
     meta: { requiresAuth: true, role: 'admin' },
   },
   {

@@ -3,22 +3,23 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
 import { saveSession } from '@/services/auth'
+import { useToast } from '@/services/toast'
 
 const router = useRouter()
+const toast = useToast()
 const email = ref('')
 const password = ref('')
-const error = ref('')
 const loading = ref(false)
 
 async function login() {
-  error.value = ''
   loading.value = true
   try {
     const { data } = await api.post('/login', { email: email.value, password: password.value })
     saveSession(data.data.token, data.data.user)
+    toast.success('Welcome back, ' + data.data.user.name + '.')
     router.push(data.data.user.role === 'admin' ? '/admin' : '/user')
   } catch (e) {
-    error.value = e.response?.data?.message || 'Login failed. Please try again.'
+    // api.js interceptor already shows a toast for HTTP errors
   } finally {
     loading.value = false
   }
@@ -55,8 +56,6 @@ async function login() {
         <h1 class="auth-card__title auth-card__title--white">Log In</h1>
         <p class="auth-card__subtitle auth-card__subtitle--dim">Your role will be identified automatically.</p>
         <div class="auth-divider auth-divider--dark"></div>
-
-        <p v-if="error" class="auth-error">{{ error }}</p>
 
         <form class="auth-form" @submit.prevent="login">
           <div class="form-field">

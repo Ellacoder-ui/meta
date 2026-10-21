@@ -14,6 +14,14 @@ class ItemController extends Controller
     {
         $query = Item::with('category');
 
+        if ($request->filled('search')) {
+            $search = $request->string('search');
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', '%'.$search.'%')
+                    ->orWhere('asset_tag', 'like', '%'.$search.'%');
+            });
+        }
+
         if ($request->filled('category_id')) {
             $query->where('category_id', $request->integer('category_id'));
         }
@@ -22,9 +30,20 @@ class ItemController extends Controller
             $query->where('status', $request->string('status'));
         }
 
+        $perPage = (int) $request->input('per_page', 15);
+        $items = $query->paginate($perPage);
+
         return response()->json([
             'success' => true,
-            'data' => $query->get(),
+            'data' => $items->items(),
+            'meta' => [
+                'current_page' => $items->currentPage(),
+                'last_page' => $items->lastPage(),
+                'per_page' => $items->perPage(),
+                'total' => $items->total(),
+                'from' => $items->firstItem(),
+                'to' => $items->lastItem(),
+            ],
         ]);
     }
 
